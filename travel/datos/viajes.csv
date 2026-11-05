@@ -1,0 +1,7 @@
+ciudad,ciudad_en,pais,pais_en,lat,lon,inicio,fin,pagado_por,motivo,evento,nota,nota_en,tipo
+Madrid,,España,Spain,40.4168,-3.7038,2025,hoy,harness,base,,"Base del doctorado: Ontology Engineering Group, Universidad Politécnica de Madrid.","PhD base: Ontology Engineering Group, Universidad Politécnica de Madrid.",base
+Cercedilla,,España,Spain,40.7433,-4.0597,2025-12,,harness,taller,,1.er taller de formación de la red HARNESS.,1st HARNESS Network Training Workshop.,
+Turín,Turin,Italia,Italy,45.0703,7.6869,2025-12,,harness,congreso,JURIX 2025,Doctoral Consortium y CLAIRvoyantS.,Doctoral Consortium and CLAIRvoyantS.,
+Aviñón,Avignon,Francia,France,43.9493,4.8055,2026-06,,harness,taller,,2.º taller de formación de la red HARNESS.,2nd HARNESS Network Training Workshop.,
+Bari,,Italia,Italy,41.1171,16.8719,2026-10,,harness,congreso,ISWC 2026,Presentación (ISWC Student Grant / HARNESS).,Presenting (ISWC Student Grant / HARNESS).,
+Angers,,Francia,France,47.4784,-0.5632,2026-10,,,congreso,EXPLAINS 2026,"Congreso integrado en IJCCI 2026 (International Joint Conference on Computational Intelligence), en Angers. Participé en remoto.","Conference held within IJCCI 2026 (International Joint Conference on Computational Intelligence) in Angers. I took part remotely.",virtual

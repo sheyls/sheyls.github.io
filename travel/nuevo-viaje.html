@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="robots" content="noindex">
+<title>Nuevo viaje</title>
+<style>
+@font-face{font-family:"Pixelify Sans";src:url(assets/fonts/pixelify-sans-latin-400-normal.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"Pixelify Sans";src:url(assets/fonts/pixelify-sans-latin-600-normal.woff2) format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"VT323";src:url(assets/fonts/vt323-latin-400-normal.woff2) format("woff2");font-display:swap}
+:root{
+  color-scheme:dark;
+  --bg:#130b1b; --panel:#1b1027; --ink:#fff1e6; --mute:#dccbd3;
+  --orange:#ff9447; --pink:#ff3d8b; --cyan:#2fd8ff; --gold:#ffc75f;
+  --px:"Pixelify Sans",ui-monospace,monospace; --vt:"VT323",ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--px);font-size:15px;line-height:1.45;
+  padding:28px max(16px,env(safe-area-inset-left,0px)) 40px max(16px,env(safe-area-inset-right,0px))}
+main{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+a{color:var(--cyan)}
+.prompt{font-family:var(--vt);font-size:20px;color:var(--cyan)}
+h1{font-weight:600;font-size:30px;line-height:1.1;text-shadow:3px 3px 0 var(--pink)}
+.lead{color:var(--mute);max-width:60ch}
+.win{border:2px solid var(--wc,var(--orange));background:var(--panel);box-shadow:5px 5px 0 rgba(0,0,0,.5)}
+.tbar{background:var(--wc,var(--orange));color:var(--bg);font-family:var(--vt);font-size:19px;padding:2px 9px}
+.wbody{padding:14px 16px 16px;display:grid;grid-template-columns:1fr 1fr;gap:12px 14px}
+.full{grid-column:1/-1}
+label{display:flex;flex-direction:column;gap:4px;font-family:var(--vt);font-size:19px;color:var(--gold);min-width:0}
+label small{color:var(--mute);font-size:16px}
+input,select,textarea{font-family:var(--px);font-size:15px;color:var(--ink);background:#0d0713;border:2px solid #4a3060;padding:7px 9px;width:100%;min-width:0}
+textarea{min-height:58px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--cyan)}
+button{font-family:var(--vt);font-size:20px;color:var(--bg);background:var(--orange);border:0;padding:5px 14px;cursor:pointer;box-shadow:3px 3px 0 rgba(0,0,0,.5)}
+button.ghost{background:none;color:var(--cyan);box-shadow:none;border:2px solid var(--cyan)}
+button:focus-visible{outline:2px dashed var(--gold);outline-offset:3px}
+.row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.row>label{flex:1 1 140px}
+#results{display:flex;flex-direction:column;gap:4px}
+#results button{text-align:left;font-family:var(--px);font-size:14px;background:#0d0713;color:var(--ink);border:2px solid #4a3060;box-shadow:none}
+#results button:hover{border-color:var(--cyan)}
+.status{font-family:var(--vt);font-size:18px;color:var(--mute)}
+.out{--wc:var(--cyan)}
+.out .wbody{display:flex;flex-direction:column;gap:10px}
+pre{font-family:var(--vt);font-size:18px;white-space:pre-wrap;word-break:break-all;background:#0d0713;border:2px dashed #4a3060;padding:10px;color:var(--cyan);min-height:44px}
+ol{padding-left:22px;color:var(--mute)}
+ol li+li{margin-top:4px}
+@media (max-width:600px){ .wbody{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<main>
+  <div>
+    <div class="prompt">~/doctorado/viajes $ nuevo</div>
+    <h1>Añadir un viaje</h1>
+  </div>
+  <p class="lead">Rellena el formulario y copia la línea que sale abajo. Luego pégala al final de <b>datos/viajes.csv</b> en GitHub. Nada se guarda desde esta página.</p>
+
+  <section class="win">
+    <div class="tbar">viaje.txt</div>
+    <form class="wbody" id="f" autocomplete="off">
+      <div class="full row">
+        <label>Buscar ciudad<input id="q" placeholder="p. ej. Ghent, Bélgica"></label>
+        <button type="button" id="search">buscar coordenadas</button>
+      </div>
+      <div class="full" id="results"></div>
+      <div class="full status" id="status"></div>
+
+      <label>Ciudad<input id="ciudad" required></label>
+      <label>Ciudad en inglés <small>si cambia</small><input id="ciudad_en"></label>
+      <label>País<input id="pais"></label>
+      <label>País en inglés<input id="pais_en"></label>
+      <label>Latitud<input id="lat" inputmode="decimal" required></label>
+      <label>Longitud<input id="lon" inputmode="decimal" required></label>
+      <label>Inicio <small>2026-05-14, 2026-05 o 2026</small><input id="inicio" required placeholder="2026-05"></label>
+      <label>Fin <small>vacío = mismo día/mes · "hoy" = sigue</small><input id="fin" placeholder=""></label>
+      <label>Quién pagó<select id="pagado_por"></select></label>
+      <label>Tipo<select id="tipo">
+        <option value="">viaje normal</option>
+        <option value="virtual">virtual (en remoto)</option>
+        <option value="base">base (tu sitio fijo)</option>
+      </select></label>
+      <label>Motivo<select id="motivo"></select></label>
+      <label>Nombre del evento <small>opcional, p. ej. ISWC 2026</small><input id="evento"></label>
+      <label class="full">Nota<textarea id="nota"></textarea></label>
+      <label class="full">Nota en inglés<textarea id="nota_en"></textarea></label>
+    </form>
+  </section>
+
+  <section class="win out">
+    <div class="tbar">linea.csv</div>
+    <div class="wbody">
+      <pre id="line" aria-live="polite"></pre>
+      <div class="row">
+        <button type="button" id="copy">copiar línea</button>
+        <a id="edit" href="#" target="_blank" rel="noopener">abrir viajes.csv en GitHub para pegarla</a>
+      </div>
+      <ol>
+        <li>Pulsa <b>copiar línea</b>.</li>
+        <li>Abre <b>datos/viajes.csv</b> en GitHub y pulsa el lápiz (editar).</li>
+        <li>Pega la línea al final, en una línea nueva, y pulsa <b>Commit changes</b>.</li>
+        <li>En uno o dos minutos aparece en el globo.</li>
+      </ol>
+    </div>
+  </section>
+  <p class="status"><a href="./">volver al globo</a></p>
+</main>
+
+<script src="datos/ajustes.js"></script>
+<script>
+(function(){
+  const D = window.TRAVEL || {funders:{},purposes:{}};
+  const $ = id => document.getElementById(id);
+  const label = v => v && typeof v==='object' ? (v.es||v.en||'') : (v||'');
+  const COLS = ['ciudad','ciudad_en','pais','pais_en','lat','lon','inicio','fin','pagado_por','motivo','evento','nota','nota_en','tipo'];
+
+  const fund = $('pagado_por');
+  fund.append(new Option('(nadie / no aplica)',''));
+  Object.entries(D.funders||{}).forEach(([k,v])=>fund.append(new Option(`${label(v)}  [${k}]`,k)));
+  const mot = $('motivo');
+  Object.entries(D.purposes||{}).forEach(([k,v])=>mot.append(new Option(`${label(v)}  [${k}]`,k)));
+  if(D.purposes && D.purposes.congreso) mot.value='congreso';
+  if(D.funders && D.funders.harness) fund.value='harness';
+
+  const q = v => { v=String(v??'').trim(); return /[",;\n]/.test(v) ? `"${v.replace(/"/g,'""')}"` : v; };
+  function update(){
+    $('line').textContent = COLS.map(c=>q($(c).value)).join(',');
+  }
+  $('f').addEventListener('input',update);
+  $('f').addEventListener('change',update);
+  update();
+
+  $('copy').onclick = () => {
+    const txt=$('line').textContent;
+    const done=()=>{ $('copy').textContent='copiada'; setTimeout(()=>$('copy').textContent='copiar línea',1500); };
+    if(navigator.clipboard) navigator.clipboard.writeText(txt).then(done).catch(sel); else sel();
+    function sel(){ const r=document.createRange(); r.selectNodeContents($('line')); const s=getSelection(); s.removeAllRanges(); s.addRange(r); }
+  };
+
+  /* enlace al editor de GitHub: https://USUARIO.github.io/REPO/ -> github.com/USUARIO/REPO/edit/main/datos/viajes.csv */
+  const G = D.github || {};
+  const m = location.hostname.match(/^([^.]+)\.github\.io$/);
+  const gUser = G.user || (m && m[1]);
+  const gRepo = G.repo || (gUser ? `${gUser}.github.io` : '');
+  if(gUser && gRepo && (G.user || G.folder)){
+    $('edit').href=`https://github.com/${gUser}/${gRepo}/edit/${G.branch||'main'}/${G.folder?G.folder.replace(/\/?$/,'/'):''}datos/viajes.csv`;
+  }else if(m){
+    const user=m[1]; const parts=location.pathname.split('/').filter(Boolean);
+    const repo = (parts.length && !parts[0].endsWith('.html')) ? parts[0] : `${user}.github.io`;
+    const sub = (repo===`${user}.github.io` && parts.length>1) ? parts.slice(0,-1).join('/')+'/' : (repo!==`${user}.github.io` && parts.length>2 ? parts.slice(1,-1).join('/')+'/' : '');
+    $('edit').href=`https://github.com/${user}/${repo}/edit/main/${sub}datos/viajes.csv`;
+  }else{
+    $('edit').removeAttribute('href'); $('edit').textContent='(el enlace funciona cuando la página está en GitHub Pages)';
+  }
+
+  /* buscar coordenadas con OpenStreetMap (Nominatim) */
+  async function search(){
+    const term=$('q').value.trim(); if(!term) return;
+    $('status').textContent='buscando...'; $('results').innerHTML='';
+    try{
+      const url='https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&limit=5&accept-language=es&q='+encodeURIComponent(term);
+      const res=await fetch(url,{headers:{'Accept':'application/json'}});
+      const list=await res.json();
+      if(!list.length){ $('status').textContent='No he encontrado ese sitio. Prueba con "ciudad, país".'; return; }
+      $('status').textContent='Elige el resultado correcto:';
+      list.forEach(it=>{
+        const b=document.createElement('button'); b.type='button'; b.textContent=it.display_name;
+        b.onclick=()=>pick(it);
+        $('results').append(b);
+      });
+    }catch(e){
+      $('status').textContent='No se pudo buscar ahora. Puedes copiar las coordenadas de Google Maps (clic derecho en la ciudad).';
+    }
+  }
+  async function pick(it){
+    const a=it.address||{};
+    $('ciudad').value = a.city||a.town||a.village||a.municipality||it.name||'';
+    $('pais').value = a.country||'';
+    $('lat').value = (+it.lat).toFixed(4);
+    $('lon').value = (+it.lon).toFixed(4);
+    $('results').innerHTML=''; $('status').textContent='Coordenadas puestas. Revisa los nombres en inglés.';
+    try{
+      const r=await fetch(`https://nominatim.openstreetmap.org/details?format=json&osmtype=${it.osm_type[0].toUpperCase()}&osmid=${it.osm_id}&accept-language=en`);
+      const d=await r.json();
+      const en=(d.names&&(d.names['name:en']))||'';
+      if(en && en!==$('ciudad').value) $('ciudad_en').value=en;
+    }catch(e){}
+    try{
+      const r2=await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=3&accept-language=en&lat=${it.lat}&lon=${it.lon}`);
+      const d2=await r2.json(); const cen=d2.address&&d2.address.country;
+      if(cen && cen!==$('pais').value) $('pais_en').value=cen;
+    }catch(e){}
+    update();
+  }
+  $('search').onclick=search;
+  $('q').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); search(); } });
+})();
+</script>
+</body>
+</html>
