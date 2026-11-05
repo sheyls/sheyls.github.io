@@ -14,8 +14,9 @@ window.TRAVEL = {
   // Está en el repo TU-USUARIO.github.io, carpeta "travel". El usuario se detecta solo desde la web.
   github: { user: "", repo: "", folder: "travel" },
 
-  // Idioma con el que se abre la página la primera vez: "es" o "en"
-  defaultLang: "es",
+  // Idioma con el que se abre la primera vez: "es", "en" o "" (vacío = según el idioma del navegador;
+  // los navegadores en español la ven en español y el resto en inglés).
+  defaultLang: "",
 
   // Vista inicial del globo: "world" o "europe"
   defaultView: "world",

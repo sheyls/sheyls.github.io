@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -8,8 +8,20 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<title>Dónde me ha llevado el doctorado</title>
-<meta name="description" content="Globo interactivo con las estancias, congresos y viajes de un doctorado, filtrables por quién los pagó.">
+<title>Where my PhD has taken me</title>
+<meta name="description" content="An interactive pixel-art globe with the research stays, conferences and workshops of my PhD.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Sheyla Leyva Sánchez">
+<meta property="og:title" content="Where my PhD has taken me · Sheyla Leyva Sánchez">
+<meta property="og:description" content="An interactive pixel-art globe with the research stays, conferences and workshops of my PhD.">
+<meta property="og:url" content="https://sheyls.github.io/travel/">
+<meta property="og:image" content="https://sheyls.github.io/travel/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A pixel-art globe with arcs from Madrid to conferences and workshops in Europe.">
+<meta property="og:locale" content="en_GB">
+<meta property="og:locale:alternate" content="es_ES">
+<meta name="twitter:card" content="summary_large_image">
 <style>
 @font-face{font-family:"Pixelify Sans";src:url(assets/fonts/pixelify-sans-latin-400-normal.woff2) format("woff2");font-weight:400;font-display:swap}
 @font-face{font-family:"Pixelify Sans";src:url(assets/fonts/pixelify-sans-latin-600-normal.woff2) format("woff2");font-weight:600;font-display:swap}
@@ -85,7 +97,9 @@ button{font:inherit;color:inherit;cursor:pointer}
   overflow-y:auto;overflow-x:hidden;padding:0 6px 6px 0;
   scrollbar-width:thin;scrollbar-color:var(--lilac) transparent;
 }
-.prompt{font-family:var(--vt);font-size:19px;color:var(--cyan);line-height:1}
+.prompt{display:inline-block;font-family:var(--vt);font-size:19px;color:var(--cyan);line-height:1;text-decoration:none}
+.prompt::before{content:"← ";color:var(--pink)}
+.prompt:hover{color:var(--ink)}
 .head h1{
   margin-top:6px;
   font-weight:600;font-size:clamp(26px,2.2vw,32px);line-height:1.12;
@@ -249,7 +263,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 
 <div class="left" id="left">
   <header class="head">
-    <div class="prompt" aria-hidden="true" data-i="prompt"></div>
+    <a class="prompt" href="../" data-i="prompt" data-it="homeTitle"></a>
     <h1><span id="title"></span></h1>
     <p id="subtitle"></p>
     <div class="statline"><span id="statline"></span><span class="cursor" aria-hidden="true"></span></div>
@@ -378,7 +392,7 @@ const $ = (s,el=document)=>el.querySelector(s);
 /* ---------- idioma / language ---------- */
 const T = {
   es:{
-    locale:'es-ES', prompt:'~/doctorado/viajes $', canvas:'Globo interactivo con las estancias del doctorado. Arrastra para girarlo.',
+    locale:'es-ES', prompt:'~/doctorado/viajes $', homeTitle:'Volver al inicio', canvas:'Globo interactivo con las estancias del doctorado. Arrastra para girarlo.',
     legendAria:'Leyenda', wLegend:'leyenda.txt', hFunder:'Quién pagó', hType:'Tipo de estancia', hPurpose:'Motivo',
     showAll:'mostrar todo', hint:'doble clic = ver solo esa opción', filters:'filtros',
     view:'Vista', world:'mundo', europe:'europa', zoomIn:'Acercar', zoomOut:'Alejar',
@@ -391,7 +405,7 @@ const T = {
     kind:l=>l?'larga':'corta'
   },
   en:{
-    locale:'en-GB', prompt:'~/phd/travels $', canvas:'Interactive globe with the PhD stays. Drag to spin it.',
+    locale:'en-GB', prompt:'~/phd/travels $', homeTitle:'Back to home', canvas:'Interactive globe with the PhD stays. Drag to spin it.',
     legendAria:'Legend', wLegend:'legend.txt', hFunder:'Who paid', hType:'Stay type', hPurpose:'Purpose',
     showAll:'show all', hint:'double click = show only that one', filters:'filters',
     view:'View', world:'world', europe:'europe', zoomIn:'Zoom in', zoomOut:'Zoom out',
