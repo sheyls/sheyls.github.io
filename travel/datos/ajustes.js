@@ -7,8 +7,8 @@
 window.TRAVEL = {
   // Textos de cabecera
   title:    { es: "Dónde me ha llevado el doctorado", en: "Where my PhD has taken me" },
-  subtitle: { es: "Beca doctoral HARNESS, de 2025 a hoy. Estancias, congresos y talleres, coloreados según quién los pagó.",
-              en: "HARNESS doctoral fellowship, 2025 to now. Stays, conferences and workshops, coloured by who paid for them." },
+  // Subtítulo opcional bajo el título (déjalo vacío para no mostrar nada)
+  subtitle: "",
 
   // Dónde vive esto en GitHub (para el enlace "abrir viajes.csv en GitHub" de nuevo-viaje.html).
   // Está en el repo TU-USUARIO.github.io, carpeta "travel". El usuario se detecta solo desde la web.

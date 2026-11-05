@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#130b1b">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <title>Dónde me ha llevado el doctorado</title>
 <meta name="description" content="Globo interactivo con las estancias, congresos y viajes de un doctorado, filtrables por quién los pagó.">
 <style>
@@ -92,7 +95,8 @@ button{font:inherit;color:inherit;cursor:pointer}
 .cursor{display:inline-block;width:.5em;height:.95em;margin-left:.12em;vertical-align:-.1em;background:var(--butter);animation:blink 1.05s steps(1) infinite}
 @keyframes blink{50%{opacity:0}}
 .head p{margin-top:9px;color:var(--mute);font-family:var(--vt);font-size:20px;line-height:1.08;max-width:32ch}
-.statline{display:none;margin-top:4px;font-family:var(--vt);font-size:19px;color:var(--cyan)}
+.statline{display:block;margin-top:8px;font-family:var(--vt);font-size:22px;line-height:1;color:var(--cyan)}
+.head p:empty{display:none}
 
 .legend{--wc:var(--pink)}
 .legend h2{font-family:var(--vt);font-weight:400;font-size:20px;line-height:1;color:var(--mint);margin-bottom:9px}
@@ -218,8 +222,6 @@ button{font:inherit;color:inherit;cursor:pointer}
 @media (max-width:899px){
   .left{left:14px;right:14px;top:14px;width:auto;max-height:none;overflow:visible;gap:0;padding:0}
   .head h1{font-size:23px}
-  .head p{display:none}
-  .statline{display:block}
   .stats{display:none}
   .legend{margin-top:10px;background:none;border:0;box-shadow:none}
   .legend .tbar,.legend h2{display:none}
@@ -248,9 +250,9 @@ button{font:inherit;color:inherit;cursor:pointer}
 <div class="left" id="left">
   <header class="head">
     <div class="prompt" aria-hidden="true" data-i="prompt"></div>
-    <h1><span id="title"></span><span class="cursor" aria-hidden="true"></span></h1>
+    <h1><span id="title"></span></h1>
     <p id="subtitle"></p>
-    <div class="statline" id="statline"></div>
+    <div class="statline"><span id="statline"></span><span class="cursor" aria-hidden="true"></span></div>
   </header>
 
 </div>
@@ -270,14 +272,6 @@ button{font:inherit;color:inherit;cursor:pointer}
   </div>
 </div>
 
-<section class="win stats" data-ia="summary">
-  <div class="tbar"><span data-i="wStats"></span><i class="sq" aria-hidden="true"><b></b><b></b></i></div>
-  <dl class="wbody" aria-live="polite">
-    <dt id="sl-stays">estancias</dt><dd id="st-stays">0</dd>
-    <dt id="sl-countries">países</dt><dd id="st-countries">0</dd>
-    <dt data-i="km" data-it="kmTitle"></dt><dd id="st-km">0</dd>
-  </dl>
-</section>
 
 <article class="win card" id="card" aria-live="polite">
   <div class="tbar"><span>info.txt</span><button class="x" id="cardx" type="button" data-ia="close">x</button></div>
@@ -579,7 +573,7 @@ function resize(){
   document.documentElement.style.setProperty('--tl-h',tlH+'px');
   desktop = W>=900;
   let top,bottom,l,r;
-  if(desktop){ l=370; r=W-250; top=70; bottom=H-tlH-40; if(r-l<420){ r=W-24; } }
+  if(desktop){ l=0; r=W; top=40; bottom=H-tlH-40; }
   else { top=$('#left').getBoundingClientRect().bottom+4; bottom=H-tlH-30-46; l=0; r=W; }
   cx=Math.round((l+r)/2); cy=Math.round((top+bottom)/2);
   const half=Math.min((r-l)/2,(bottom-top)/2);
@@ -1093,9 +1087,6 @@ function updateStats(){
   const v=stays.filter(s=>visible(s)&&!s.base&&!s.virtual);
   const countries=new Set(v.map(s=>s.ckey!=null?s.ckey:s.ckeyAlt)).size;
   const days=d3.sum(v,s=>s.days), km=d3.sum(v,s=>s.km);
-  tween('stays',v.length); tween('countries',countries); tween('km',km);
-  $('#sl-stays').textContent=t.stays(v.length);
-  $('#sl-countries').textContent=t.countries(countries);
   $('#statline').textContent=`> ${v.length} ${t.stays(v.length)}, ${countries} ${t.countries(countries)}`;
 }
 
